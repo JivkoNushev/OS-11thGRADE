@@ -19,6 +19,4 @@ int count_bytes(int fd);
 
 int count_lines(int fd);
 
-int wc(int fd, int argc, const char **argv);
-
 #endif

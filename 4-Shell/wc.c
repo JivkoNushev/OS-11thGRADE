@@ -4,10 +4,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-int strcmp_(const char *left, const char *right);
-
-int count_bytes(int fd);
-int count_lines(int fd);
+#include "../3-utils/utils.h"
 
 int wc(int fd, int argc, const char **argv)
 {
@@ -49,5 +46,5 @@ int wc(int fd, int argc, const char **argv)
         printf("%d\n", count_bytes(fd));
         lseek(fd, 0, SEEK_SET);
     }
-    
+    return 1;
 }
