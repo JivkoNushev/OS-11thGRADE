@@ -256,12 +256,12 @@ int test_read_line_()
 {
     char tests[TESTS_COUNT][TESTS_LENGTH] = 
     {   
-        "./Tests/File_tests/file_1",
-        "./Tests/File_tests/file_2",
-        "./Tests/File_tests/file_3",
-        "./Tests/File_tests/file_4",
-        "./Tests/File_tests/file_5",
-        "./Tests/File_tests/file_6"
+        "../0-Tests/file_1",
+        "../0-Tests/file_2",
+        "../0-Tests/file_3",
+        "../0-Tests/file_4",
+        "../0-Tests/file_5",
+        "../0-Tests/file_6"
     };
     char results[TESTS_COUNT][TESTS_LENGTH] = 
     {   
@@ -305,12 +305,12 @@ int test_count_bytes()
 {
     char tests[TESTS_COUNT][TESTS_LENGTH] = 
     {   
-        "./Tests/File_tests/file_1",
-        "./Tests/File_tests/file_2",
-        "./Tests/File_tests/file_3",
-        "./Tests/File_tests/file_4",
-        "./Tests/File_tests/file_5",
-        "./Tests/File_tests/file_6"
+        "../0-Tests/file_1",
+        "../0-Tests/file_2",
+        "../0-Tests/file_3",
+        "../0-Tests/file_4",
+        "../0-Tests/file_5",
+        "../0-Tests/file_6"
     };
     int results[TESTS_COUNT] = 
     {   
@@ -352,12 +352,12 @@ int test_count_lines()
 {
     char tests[TESTS_COUNT][TESTS_LENGTH] = 
     {   
-        "./Tests/File_tests/file_1",
-        "./Tests/File_tests/file_2",
-        "./Tests/File_tests/file_3",
-        "./Tests/File_tests/file_4",
-        "./Tests/File_tests/file_5",
-        "./Tests/File_tests/file_6"
+        "../0-Tests/file_1",
+        "../0-Tests/file_2",
+        "../0-Tests/file_3",
+        "../0-Tests/file_4",
+        "../0-Tests/file_5",
+        "../0-Tests/file_6"
     };
     int results[TESTS_COUNT] = 
     {   

@@ -13,12 +13,12 @@ int test_wc()
 {
     char tests[TESTS_COUNT][TESTS_LENGTH] = 
     {   
-        "./main.o ./Tests/File_tests/file_1      ",
-        "./main.o ./Tests/File_tests/file_2  -l      ",
-        "./main.o ./Tests/File_tests/file_3  -c -l      ",
-        "./main.o ./Tests/File_tests/file_4  -l -c -c   ",
-        "./main.o ./Tests/File_tests/file_5  -p    ",
-        "./main.o ./Tests/File_tests/file_6 - l"
+        "./main.o ../0-Tests/file_1      ",
+        "./main.o ../0-Tests/file_2  -l      ",
+        "./main.o ../0-Tests/file_3  -c -l      ",
+        "./main.o ../0-Tests/file_4  -l -c -c   ",
+        "./main.o ../0-Tests/file_5  -p    ",
+        "./main.o ../0-Tests/file_6 - l"
     };
     int tests2[TESTS_COUNT] = 
     {   
@@ -36,7 +36,7 @@ int test_wc()
     {
         puts("Testing...\n");
         printf("Test #%d...", i + 1);
-        fd = open(tests[i], O_RDONLY);
+        fd = open(tests[1], O_RDONLY);
         if (-1 == fd)
         {
             puts("Couldn't open file");
