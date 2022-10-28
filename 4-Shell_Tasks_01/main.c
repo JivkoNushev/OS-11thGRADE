@@ -10,18 +10,19 @@
 #include "../3-utils/utils.c"
 
 #include "wc.h"
+#include "test.h"
 
 int main(int argc, const char *argv[])
 {
-    int fd = open("file", O_RDONLY);
-    if(-1 == fd)
+    if(0 == test_wc())
     {
-        puts("Couldn't open file\n");
+        puts("TEST SUCCEEDED\n");
+    }
+    else
+    {
+        puts("TEST FAILED\n");
         exit(1);
     }
 
-    wc(fd, argc, argv);
-
-    close(fd);
     return 0;
 }

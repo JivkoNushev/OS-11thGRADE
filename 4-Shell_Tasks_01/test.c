@@ -5,8 +5,9 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-#include "../3-utils/utils.h"
 #include "test.h"
+#include "../3-utils/utils.h"
+#include "wc.h"
 
 int test_wc()
 {

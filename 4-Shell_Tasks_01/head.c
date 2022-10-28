@@ -4,8 +4,8 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-int strcmp_(const char *left, const char *right);
-char *read_line_(int fd);
+#include "head.h"
+#include "../3-utils/utils.h"
 
 int head(int fd, int argc, const char **argv)
 {
@@ -48,4 +48,6 @@ int head(int fd, int argc, const char **argv)
         printf("%d\n", count_bytes(fd));
         lseek(fd, 0, SEEK_SET);
     }
+
+    return 0;
 }
