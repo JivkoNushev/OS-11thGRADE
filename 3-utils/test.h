@@ -22,6 +22,4 @@ int test_count_bytes();
 
 int test_count_lines();
 
-int test_wc();
-
 #endif
