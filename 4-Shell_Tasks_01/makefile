@@ -1,4 +1,4 @@
-FILES = main.c wc.c test.c head.c
+FILES = main.c wc.c head.c
 
 all:
 	gcc -Wall ${FILES} -o main.o

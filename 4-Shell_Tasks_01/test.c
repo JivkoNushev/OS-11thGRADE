@@ -11,10 +11,19 @@
 
 int test_wc()
 {
+    char files[TESTS_COUNT][TESTS_LENGTH] =
+    {
+        "../0-Tests/file_1",
+        "../0-Tests/file_2",
+        "../0-Tests/file_3",
+        "../0-Tests/file_4",
+        "../0-Tests/file_5",
+        "../0-Tests/file_6"
+    };
     char tests[TESTS_COUNT][TESTS_LENGTH] = 
     {   
-        "./main.o ../0-Tests/file_1      ",
-        "./main.o ../0-Tests/file_2  -l      ",
+        "./main.o", "../0-Tests/file_1  ",
+        "./main.o", "../0-Tests/file_2  ", "-l      ",
         "./main.o ../0-Tests/file_3  -c -l      ",
         "./main.o ../0-Tests/file_4  -l -c -c   ",
         "./main.o ../0-Tests/file_5  -p    ",
@@ -30,28 +39,33 @@ int test_wc()
         3
     };
 
-    int test_status = 0;
     int fd = -1;
+    int tests_count = 0;
     for (int i = 0; i < TESTS_COUNT; i++)
     {
         puts("Testing...\n");
         printf("Test #%d...", i + 1);
-        fd = open(tests[1], O_RDONLY);
+        fd = open(files[i], O_RDONLY);
         if (-1 == fd)
         {
             puts("Couldn't open file");
+            close(fd);
             exit(2);
         }
-        if(1 != wc(fd, tests2[i], (const char**)tests))
+        if(1 != wc(fd, tests2[i], tests[tests_count]))
         {
             puts("Failed\n");
-            test_status = -1;
+            close(fd);
+            exit(-1);
         }
         else
         {
             puts("Succeeded\n");
         }
+        tests_count += tests2[i];
+        close(fd);
     }
     
-    return test_status;
+    return 0;
 }
+

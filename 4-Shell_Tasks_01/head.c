@@ -9,44 +9,49 @@
 
 int head(int fd, int argc, const char **argv)
 {
-    int args = 0;
-
-    if (argc != 2 || argc != 4)
+    if (argc != 2 && argc != 4)
     {
         puts("Wrong arguments\n");
         exit(1);
     }
 
+    int lines_count = 0;
     if(argc == 2)
     {
-
+        lines_count = 10;
     }
     else
     {
-
-    }
-
-    for (int it = argc - 2; it > 0; it--)
-    {
-        if (0 == strcmp_("-l", argv[it + 1]))
+        if(0 == (lines_count = atoi(argv[3])))
         {
-            args |= 1;
+            puts("Number of lines must be an integer value\n");
+            exit(1);
         }
-        else if (0 == strcmp_("-c", argv[it + 1]))
+        
+        // segm fault when "-n", argv[2]
+        if (0 != strcmp_("-n", argv[2])) 
         {
-            args |= 2;
+            printf("Argument %s is unknown\n", argv[2]);
+            exit(1);
         }
-    }
-    if (args & 1)
-    {
-        printf("%d\n", count_lines(fd));
-        lseek(fd, 0, SEEK_SET);
     }
 
-    if (args & 2)
+    int offset = 0;
+    char *line = 0;
+
+    for(int i = 0; i < lines_count; i++)
     {
-        printf("%d\n", count_bytes(fd));
-        lseek(fd, 0, SEEK_SET);
+        lseek(fd, offset, SEEK_SET);
+        line = read_line_(fd);
+        offset += strlen_(line) + 1; 
+        lseek(fd, offset, SEEK_SET);
+
+        if (lseek(fd, 0, SEEK_CUR) >= lseek(fd, 0, SEEK_END))
+        {
+            break;
+        }
+        printf("%s\n", line);
+        free(line);
     }
 
     return 0;

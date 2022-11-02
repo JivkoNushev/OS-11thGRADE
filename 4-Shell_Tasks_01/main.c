@@ -11,18 +11,27 @@
 
 #include "wc.h"
 #include "test.h"
+#include "head.h"
 
 int main(int argc, const char *argv[])
 {
-    if(0 == test_wc())
+    // if(0 == test_wc())
+    // {
+    //     puts("TEST SUCCEEDED\n");
+    // }
+    // else
+    // {
+    //     puts("TEST FAILED\n");
+    //     exit(1);
+    // }
+
+    int fd = open(argv[1], O_RDONLY);
+    if(0 == fd)
     {
-        puts("TEST SUCCEEDED\n");
-    }
-    else
-    {
-        puts("TEST FAILED\n");
+        puts("Couldn't open file");
         exit(1);
     }
+    head(fd, argc, argv);
 
     return 0;
 }
