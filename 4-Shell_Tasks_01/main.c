@@ -31,7 +31,8 @@ int main(int argc, const char *argv[])
         puts("Couldn't open file");
         exit(1);
     }
-    head(fd, argc, argv);
+    //wc(fd, argc, argv);
+    //head(fd, argc, argv);
 
     return 0;
 }

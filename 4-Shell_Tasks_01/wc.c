@@ -15,24 +15,24 @@ int wc(int fd, int argc, const char **argv)
         puts("Not enough arguments\n");
         exit(1);
     }
-    if(argc > 4)
-    {
-        puts("Too many arguments\n");
-        exit(1);
-    }
     if (argc == 2)
     {
         args = 3;
     }
-    for(int it = argc - 2; it > 0; it--)
+    for(int it = 2; it < argc; it++)
     {
-        if(0 == strcmp_("-l", argv[it + 1]))
+        if(0 == strcmp_("-l", argv[it]))
         {
             args |= 1;
         }
-        else if(0 == strcmp_("-c", argv[it + 1]))
+        else if(0 == strcmp_("-c", argv[it]))
         {
             args |= 2;
+        }
+        else
+        {
+            printf("Invalid option %s\n", argv[it]);
+            exit(-1);
         }
     }
     if(args & 1)

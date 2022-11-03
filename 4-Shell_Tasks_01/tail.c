@@ -7,7 +7,7 @@
 #include "head.h"
 #include "../3-utils/utils.h"
 
-int head(int fd, int argc, const char **argv)
+int tail(int fd, int argc, const char **argv)
 {
     if (argc < 2)
     {
@@ -41,23 +41,8 @@ int head(int fd, int argc, const char **argv)
             exit(4);
         }
     }
-    
-    int end = lseek(fd, 0, SEEK_END), offset = lseek(fd, 0, SEEK_SET);
-    char *line = 0;
-    for(int i = 0; i < lines_count; i++)
-    {
-        if(lseek(fd, 0, SEEK_CUR) > end)
-        {
-            break;
-        }
-        line = read_line_(fd);
-        printf("%s\n", line);
 
-        offset += strlen_(line) + 1;
-        lseek(fd, offset, SEEK_SET);
-
-        free(line);
-    }
+    //tail implemetation
 
     return 0;
 }

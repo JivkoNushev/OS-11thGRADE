@@ -90,6 +90,60 @@ char *strdub_(const char *string)
 
 char *read_line_(int fd)
 {
+    char buffer[256];
+    unsigned int buffer_c = 0;
+    int curr_off = lseek(fd, 0, SEEK_CUR);
+
+    int read_status = 0;
+    int i = 0;
+    while (0 < (read_status = read(fd, buffer, sizeof buffer)))
+    {
+        if(sizeof buffer == read_status)
+        {
+            buffer_c++;
+        }
+        
+        for(i = 0; i < read_status; i++)
+        {
+            if('\n' == buffer[i] || EOF == buffer[i])
+            {
+                break;
+            }   
+        }
+        if(i != read_status)
+        {
+            break;
+        }
+    }
+    if(-1 == read_status)
+    {
+        puts("Couldn't read file\n");
+        exit(1);
+    }
+
+    lseek(fd, curr_off, SEEK_SET);
+
+    unsigned int line_size = sizeof buffer * buffer_c + i;
+
+    char *line = (char *)malloc(sizeof(char) * (line_size + 1));
+    if(NULL == line)
+    {
+        puts("Couldn't malloc new line\n");
+        exit(2);
+    }
+
+    if(line_size != (read_status = read(fd, line, line_size)))
+    {
+        puts("Couldn't read whole line\n");
+        exit(3);
+    }
+
+    line[line_size] = '\0';
+    return line;
+}
+
+/*char *read_line_(int fd)
+{
     int read_status = 0;
     char buffer[256];
     int i = 0;
@@ -169,7 +223,7 @@ char *read_line_(int fd)
     free(temp);
 
     return res;
-}
+}*/
 
 int count_bytes(int fd)
 {

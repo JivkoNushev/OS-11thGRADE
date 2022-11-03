@@ -11,7 +11,7 @@
 
 int main(int argc, char const *argv[])
 {
-    if(0 == test_wc())
+    if(0 == test_read_line_())
     {
         puts("TEST SUCCEEDED\n");
     }
