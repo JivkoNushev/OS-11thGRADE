@@ -2,6 +2,8 @@
 #include <stdio.h>
 
 #include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 #include <unistd.h>
 
 #include "head.h"
@@ -57,6 +59,19 @@ int head(int fd, int argc, const char **argv)
         printf("%s\n", line);
         free(line);
     }
+
+    return 0;
+}
+
+int main(int argc, char const *argv[])
+{
+    int fd = open(argv[1], O_RDONLY);
+    if(0 == fd)
+    {
+        puts("Couldn't open file");
+        exit(1);
+    }
+    head(fd, argc, argv);
 
     return 0;
 }

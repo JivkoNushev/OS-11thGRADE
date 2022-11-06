@@ -2,6 +2,8 @@
 #include <stdio.h>
 
 #include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 #include <unistd.h>
 
 #include "utils.h"
@@ -48,4 +50,17 @@ int wc(int fd, int argc, const char **argv)
         lseek(fd, 0, SEEK_SET);
     }
     return 1;
+}
+
+int main(int argc, const char *argv[])
+{
+    int fd = open(argv[1], O_RDONLY);
+    if(0 == fd)
+    {
+        puts("Couldn't open file");
+        exit(1);
+    }
+    wc(fd, argc, argv);
+
+    return 0;
 }

@@ -2,6 +2,8 @@
 #include <stdio.h>
 
 #include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 #include <unistd.h>
 
 #include "head.h"
@@ -55,5 +57,18 @@ int tail(int fd, int argc, const char **argv)
         offset += strlen_(read_line_(fd)) + 1;
     }
     print_file(fd);
+    return 0;
+}
+
+int main(int argc, const char *argv[])
+{
+    int fd = open(argv[1], O_RDONLY);
+    if(0 == fd)
+    {
+        puts("Couldn't open file");
+        exit(1);
+    }
+    tail(fd, argc, argv);
+
     return 0;
 }
