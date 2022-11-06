@@ -188,5 +188,10 @@ int count_lines(int fd)
         puts("Could't read file\n");
         exit(1);
     }
+    if(-1 == lseek(fd, 0, SEEK_SET))
+    {
+        puts("Couldn't lseek fd\n");
+        exit(2);
+    }    
     return lines_c;
 }

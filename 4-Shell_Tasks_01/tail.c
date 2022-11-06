@@ -42,6 +42,7 @@ int tail(int fd, int argc, const char **argv)
         }
     }
 
+    count_lines()
     //tail implemetation
 
     return 0;
