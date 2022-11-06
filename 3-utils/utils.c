@@ -173,7 +173,7 @@ int count_lines(int fd)
     char buffer[256];
     int read_status = 0;
 
-    while (0 != (read_status = read(fd, buffer, sizeof buffer)))
+    while (0 < (read_status = read(fd, buffer, sizeof buffer)))
     {
         for (int i = 0; i < read_status; i++)
         {
@@ -194,4 +194,29 @@ int count_lines(int fd)
         exit(2);
     }    
     return lines_c;
+}
+
+unsigned int abs_(int n)
+{
+    return (n < 0) * -n + (n > 0) * n;
+}
+
+void print_file(int fd)
+{
+    char buffer[256];
+
+    int read_status = 0;
+    while(0 < (read_status = read(fd, buffer, sizeof buffer)))
+    {
+        if( -1 == write(0, buffer, read_status))
+        {
+            puts("Couldn't write to stdout\n");
+            exit(1);
+        }
+    }
+    if(-1 == read_status)
+    {
+        puts("Couldn't read to file\n");
+        exit(2);
+    }
 }
