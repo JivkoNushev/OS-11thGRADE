@@ -16,22 +16,24 @@ int head(int fd, int argc, const char **argv)
     }
 
     int lines_count = 10;
-
-    for(int i = 2; i < argc; i++)
+    for (int i = 2; i < argc; i++)
     {
-        if (0 == strcmp_("-n", argv[i])) 
+        if (0 == strcmp_("-n", argv[i]))
         {
-            if(i+1 < argc)
+            if (i + 1 < argc)
             {
-                if(0 == (lines_count = atoi(argv[++i])))
+                if (0 == (lines_count = atoi(argv[++i])))
                 {
-                    puts("Number of lines must be an integer value and not 0\n");
-                    exit(2);
+                    if(0 != strcmp_("0", argv[i]))
+                    {
+                        printf("Invalid number of lines: '%s'\n", argv[i]);
+                        exit(2);
+                    }
                 }
             }
             else
             {
-                puts("Option requires a non 0 integer argument\n");
+                puts("Option requires an integer argument\n");
                 exit(3);
             }
         }
@@ -41,21 +43,18 @@ int head(int fd, int argc, const char **argv)
             exit(4);
         }
     }
-    
-    int end = lseek(fd, 0, SEEK_END), offset = lseek(fd, 0, SEEK_SET);
-    char *line = 0;
-    for(int i = 0; i < lines_count; i++)
+
+    if (lines_count < 0)
     {
-        if(lseek(fd, 0, SEEK_CUR) > end)
-        {
-            break;
-        }
+        int lines_c = count_lines(fd);
+        lines_count += lines_c;
+    }
+
+    char *line = 0;
+    for (int i = 0; i < lines_count; i++)
+    {
         line = read_line_(fd);
         printf("%s\n", line);
-
-        offset += strlen_(line) + 1;
-        lseek(fd, offset, SEEK_SET);
-
         free(line);
     }
 

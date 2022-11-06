@@ -16,22 +16,24 @@ int tail(int fd, int argc, const char **argv)
     }
 
     int lines_count = 10;
-
-    for(int i = 2; i < argc; i++)
+    for (int i = 2; i < argc; i++)
     {
-        if (0 == strcmp_("-n", argv[i])) 
+        if (0 == strcmp_("-n", argv[i]))
         {
-            if(i+1 < argc)
+            if (i + 1 < argc)
             {
-                if(0 == (lines_count = atoi(argv[++i])))
+                if (0 == (lines_count = atoi(argv[++i])))
                 {
-                    puts("Number of lines must be an integer value and not 0\n");
-                    exit(2);
+                    if(0 != strcmp_("0", argv[i]))
+                    {
+                        printf("Invalid number of lines: '%s'\n", argv[i]);
+                        exit(2);
+                    }
                 }
             }
             else
             {
-                puts("Option requires a non 0 integer argument\n");
+                puts("Option requires an integer argument\n");
                 exit(3);
             }
         }
@@ -44,19 +46,14 @@ int tail(int fd, int argc, const char **argv)
 
     unsigned int lines_c = count_lines(fd);
 
-    unsigned int start_from_line = lines_count - lines_c;
+    int start_from_line = abs_(lines_count) - lines_c;
     start_from_line = start_from_line > 0 ? 0 : -start_from_line;
-    printf("lines_count=%d, lines_c=%d\n", lines_count, lines_c);
+
+    int offset = 0;
     for (size_t i = 0; i < start_from_line; i++)
     {
-        puts("1\n");
-        if (NULL == read_line_(fd))
-        {
-            puts("Couldn't read line\n");
-            exit(5);
-        }
+        offset += strlen_(read_line_(fd)) + 1;
     }
     print_file(fd);
-
     return 0;
 }

@@ -6,6 +6,8 @@
 
 #include "../3-utils/utils.h"
 
+
+// counts last line without \n too
 int wc(int fd, int argc, const char **argv)
 {
     int args = 0;
@@ -37,13 +39,13 @@ int wc(int fd, int argc, const char **argv)
     }
     if(args & 1)
     {
-        printf("%d\n", count_lines(fd));
+        printf("lines:%d\n", count_lines(fd));
         lseek(fd, 0, SEEK_SET);
     }
         
     if(args & 2)
     {
-        printf("%d\n", count_bytes(fd));
+        printf("bytes:%d\n", count_bytes(fd));
         lseek(fd, 0, SEEK_SET);
     }
     return 1;
