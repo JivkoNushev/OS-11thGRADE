@@ -35,21 +35,19 @@ int wc(int fd, int argc, const char **argv)
         else
         {
             printf("Invalid option %s\n", argv[it]);
-            exit(-1);
+            exit(2);
         }
     }
     if(args & 1)
     {
         printf("lines:%d\n", count_lines(fd));
-        lseek(fd, 0, SEEK_SET);
     }
         
     if(args & 2)
     {
         printf("bytes:%d\n", count_bytes(fd));
-        lseek(fd, 0, SEEK_SET);
     }
-    return 1;
+    return 0;
 }
 
 int main(int argc, const char *argv[])

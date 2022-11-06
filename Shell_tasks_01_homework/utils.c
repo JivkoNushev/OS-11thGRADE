@@ -163,25 +163,44 @@ char *read_line_(int fd)
 
 int count_bytes(int fd)
 {
-    int blocks_c = 0;
-    int bytes_c = 0;
-    char buffer[256];
-    int read_status = 0;
+    // int blocks_c = 0;
+    // int bytes_c = 0;
+    // char buffer[256];
+    // int read_status = 0;
 
-    while (sizeof buffer == (read_status = read(fd, buffer, sizeof buffer)))
+    // while (sizeof buffer == (read_status = read(fd, buffer, sizeof buffer)))
+    // {
+    //     blocks_c++;
+    // }
+    // if (-1 == read_status)
+    // {
+    //     puts("Could't read file\n");
+    //     exit(1);
+    // }
+    // if (sizeof buffer != read_status)
+    // {
+    //     bytes_c += read_status;
+    // }
+    // bytes_c += sizeof buffer * blocks_c;
+
+    if (-1 == lseek(fd, 0, SEEK_SET))
     {
-        blocks_c++;
+        puts("Couldn't lseek fd\n");
+        exit(2);
     }
-    if (-1 == read_status)
+
+    int bytes_c = 0;
+    if (-1 == (bytes_c = lseek(fd, 0, SEEK_END)))
     {
-        puts("Could't read file\n");
-        exit(1);
+        puts("Couldn't lseek fd\n");
+        exit(2);
     }
-    if (sizeof buffer != read_status)
+
+    if (-1 == lseek(fd, 0, SEEK_SET))
     {
-        bytes_c += read_status;
+        puts("Couldn't lseek fd\n");
+        exit(2);
     }
-    bytes_c += sizeof buffer * blocks_c;
 
     return bytes_c;
 }

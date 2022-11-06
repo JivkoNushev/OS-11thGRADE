@@ -51,10 +51,9 @@ int tail(int fd, int argc, const char **argv)
     int start_from_line = abs_(lines_count) - lines_c;
     start_from_line = start_from_line > 0 ? 0 : -start_from_line;
     
-    int offset = 0;
     for (size_t i = 0; i < start_from_line; i++)
     {
-        offset += strlen_(read_line_(fd)) + 1;
+        read_line_(fd);
     }
     print_file(fd);
     return 0;
