@@ -6,8 +6,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 
-#include "../3-utils/utils.h"
-#include "../3-utils/utils.c"
+#include "utils.h"
 
 #include "wc.h"
 #include "head.h"

@@ -5,7 +5,7 @@
 #include <unistd.h>
 
 #include "head.h"
-#include "../3-utils/utils.h"
+#include "utils.h"
 
 int tail(int fd, int argc, const char **argv)
 {

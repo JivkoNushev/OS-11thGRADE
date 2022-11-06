@@ -4,8 +4,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#include "../3-utils/utils.h"
-
+#include "utils.h"
 
 // counts last line without \n too
 int wc(int fd, int argc, const char **argv)
