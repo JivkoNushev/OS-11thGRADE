@@ -107,11 +107,6 @@ char *read_line_(int fd)
     int i = 0;
     while (0 < (read_status = read(fd, buffer, sizeof buffer)))
     {
-        if (sizeof buffer == read_status)
-        {
-            buffer_c++;
-        }
-
         for (i = 0; i < read_status; i++)
         {
             if ('\n' == buffer[i])
@@ -122,6 +117,11 @@ char *read_line_(int fd)
         if (i != read_status)
         {
             break;
+        }
+
+        if (sizeof buffer == read_status)
+        {
+            buffer_c++;
         }
     }
     if (-1 == read_status)
@@ -202,9 +202,9 @@ int count_lines(int fd)
                 lines_c++;
             }
         }
-        if(i != sizeof buffer)
+        if (i != sizeof buffer)
         {
-            if('\n' != buffer[i-1])
+            if ('\n' != buffer[i - 1])
             {
                 lines_c++;
             }
