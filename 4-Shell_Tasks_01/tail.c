@@ -45,10 +45,11 @@ int tail(int fd, int argc, const char **argv)
     unsigned int lines_c = count_lines(fd);
 
     unsigned int start_from_line = lines_count - lines_c;
-    start_from_line = start_from_line > 0 ? 0 : start_from_line;
-
+    start_from_line = start_from_line > 0 ? 0 : -start_from_line;
+    printf("lines_count=%d, lines_c=%d\n", lines_count, lines_c);
     for (size_t i = 0; i < start_from_line; i++)
     {
+        puts("1\n");
         if (NULL == read_line_(fd))
         {
             puts("Couldn't read line\n");

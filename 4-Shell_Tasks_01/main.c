@@ -12,6 +12,7 @@
 #include "wc.h"
 #include "test.h"
 #include "head.h"
+#include "tail.h"
 
 int main(int argc, const char *argv[])
 {
@@ -33,6 +34,7 @@ int main(int argc, const char *argv[])
     }
     //wc(fd, argc, argv);
     //head(fd, argc, argv);
+    tail(fd, argc, argv);
 
     return 0;
 }
