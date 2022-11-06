@@ -142,89 +142,6 @@ char *read_line_(int fd)
     return line;
 }
 
-/*char *read_line_(int fd)
-{
-    int read_status = 0;
-    char buffer[256];
-    int i = 0;
-    int block_count = 0;
-    while (sizeof buffer == (read_status = read(fd, buffer, sizeof buffer)))
-    {
-        block_count++;
-        for (; i < sizeof buffer; i++)
-        {
-            if ('\n' == buffer[i])
-                break;
-        }
-        if (sizeof buffer != i)
-            break;
-        i = 0;
-    }
-    if (-1 == read_status)
-    {
-        puts("Couldn't read file !");
-        exit(2);
-    }
-    if (sizeof buffer != read_status)
-    {
-        for (i = 0; i < read_status; i++)
-        {
-            if ('\n' == buffer[i])
-                break;
-        }
-        if (read_status == i)
-            i = 0;
-    }
-    if (0 != i)
-    {
-        char *res = (char *)malloc(sizeof(char) * (i + 1));
-        if (NULL == res)
-        {
-            puts("Couldn't malloc res for read_line");
-            exit(1);
-        }
-        *res = '\0';
-        buffer[i] = '\0';
-        char *temp = res;
-
-        res = strcat_(res, buffer);
-        free(temp);
-        return res;
-    }
-
-    int res_s = sizeof buffer * block_count;
-    char *res = (char *)malloc(sizeof(char) * (res_s + 1));
-    if (NULL == res)
-    {
-        puts("Couldn't malloc res for read_line");
-        exit(1);
-    }
-
-    if (-1 == (read_status = read(fd, res, res_s)))
-    {
-        puts("Couldn't read file");
-        exit(2);
-    }
-    res[res_s] = '\0';
-    if (-1 == (read_status = read(fd, buffer, sizeof buffer)))
-    {
-        puts("Couldn't read file");
-        exit(2);
-    }
-    buffer[read_status] = '\0';
-    res = realloc(res, sizeof(char) * (res_s + read_status + 1));
-    if (NULL == res)
-    {
-        puts("Couldn't realloc res for read_line");
-        exit(1);
-    }
-    char *temp = res;
-    res = strcat_(res, buffer);
-    free(temp);
-
-    return res;
-}*/
-
 int count_bytes(int fd)
 {
     int blocks_c = 0;
@@ -260,7 +177,7 @@ int count_lines(int fd)
     {
         for (int i = 0; i < read_status; i++)
         {
-            if ('\n' == buffer[i])
+            if ('\n' == buffer[i] || EOF == buffer[i])
             {
                 lines_c++;
             }
