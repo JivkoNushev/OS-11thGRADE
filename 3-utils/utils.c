@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdarg.h>
 
 #include <sys/types.h>
 #include <unistd.h>
@@ -91,12 +92,34 @@ char *strdub_(const char *string)
     return res;
 }
 
-char *read_line_(int fd)
+char *read_line_(int fd, ...)
 {
-    char buffer[256];
-    unsigned int buffer_c = 0;
-    int curr_off = lseek(fd, 0, SEEK_CUR);
+    int mode = 0, end = count_bytes(fd) - 1;
 
+    va_list arg;
+    va_start(arg, fd);
+    mode = va_arg(arg, int);
+    end = va_arg(arg, int);
+    va_end(arg);
+
+    if (0 == count_bytes(fd))
+    {
+        end = 0;
+    }
+    else if (0 > end)
+    {
+        end = count_bytes(fd) + end;
+    }
+
+    if (1 != mode && 0 != mode)
+    {
+        puts("Invalid mode for read_line\n");
+        exit(10);
+    }
+
+    char buffer[256];
+    unsigned int line_size = -1;
+    int curr_off = lseek(fd, 0, SEEK_CUR);
     if (-1 == curr_off)
     {
         puts("Couldn't lseek fd\n");
@@ -104,39 +127,74 @@ char *read_line_(int fd)
     }
 
     int read_status = 0;
-    int i = 0;
-    while (0 < (read_status = read(fd, buffer, sizeof buffer)))
+    if (1 == mode) // read_backwards
     {
-        for (i = 0; i < read_status; i++)
+        if (-1 == lseek(fd, end - 1, SEEK_SET))
         {
-            if ('\n' == buffer[i])
+            puts("Couldn't lseek fd\n");
+            exit(7);
+        }
+
+        while (0 < (read_status = read(fd, buffer, 1)) && 0 != end)
+        {
+            if ('\n' == buffer[0])
             {
                 break;
             }
+            line_size++;
+            if (-1 == lseek(fd, --end, SEEK_SET))
+            {
+                puts("Couldn't lseek fd\n");
+                exit(9);
+            }
         }
-        if (i != read_status)
+
+        if (-1 == read_status)
         {
-            break;
+            puts("Couldn't read file\n");
+            exit(8);
         }
 
-        if (sizeof buffer == read_status)
+        curr_off = end + 1;
+    }
+    else
+    {
+        unsigned int buffer_c = 0;
+        int i = 0;
+        while (0 < (read_status = read(fd, buffer, sizeof buffer)))
         {
-            buffer_c++;
+            for (i = 0; i < read_status; i++)
+            {
+                if ('\n' == buffer[i])
+                {
+                    break;
+                }
+            }
+            if (i != read_status)
+            {
+                break;
+            }
+
+            if (sizeof buffer == read_status)
+            {
+                buffer_c++;
+            }
         }
-    }
-    if (-1 == read_status)
-    {
-        puts("Couldn't read file\n");
-        exit(1);
-    }
+        if (-1 == read_status)
+        {
+            puts("Couldn't read file\n");
+            exit(1);
+        }
 
-    if (-1 == lseek(fd, curr_off, SEEK_SET))
-    {
-        puts("Couldn't lseek fd\n");
-        exit(6);
-    }
+        if (-1 == lseek(fd, curr_off, SEEK_SET))
+        {
+            puts("Couldn't lseek fd\n");
+            exit(6);
+        }
 
-    unsigned int line_size = sizeof buffer * buffer_c + i;
+        line_size = sizeof buffer * buffer_c + i;
+        curr_off += line_size + 1;
+    }
 
     char *line = (char *)malloc(sizeof(char) * (line_size + 1));
     if (NULL == line)
@@ -153,9 +211,9 @@ char *read_line_(int fd)
 
     line[line_size] = '\0';
 
-    if (-1 == lseek(fd, curr_off + strlen_(line) + 1, SEEK_SET))
+    if (-1 == lseek(fd, curr_off, SEEK_SET))
     {
-        puts("Couldn't lseek fd\n");
+        puts("Couldn't lseek fd1\n");
         exit(4);
     }
     return line;
@@ -190,6 +248,12 @@ int count_lines(int fd)
     int lines_c = 0;
     char buffer[256];
     int read_status = 0;
+
+    if (-1 == lseek(fd, 0, SEEK_SET))
+    {
+        puts("Couldn't lseek fd\n");
+        exit(3);
+    }
 
     int i = 0;
     while (0 < (read_status = read(fd, buffer, sizeof buffer)))

@@ -13,7 +13,7 @@ void swap_(void *a, void *b, int size);
 
 char *strdub_(const char *string);
 
-char *read_line_(int fd);
+char *read_line_(int fd, ...);
 
 int count_bytes(int fd);
 
