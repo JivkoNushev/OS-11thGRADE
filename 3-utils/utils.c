@@ -104,9 +104,7 @@ char *read_line_(int fd, int mode, ...)
     if (0 == end)
     {
         end = count_bytes(fd) - 1;
-        printf("%d\n", end);
     }
-    printf("mode = %d\nend = %d\n", mode, end);
 
     if (0 == count_bytes(fd))
     {
@@ -230,7 +228,6 @@ char *read_line_(int fd, int mode, ...)
     }
 
     line_size = sizeof buffer * buffer_c + i;
-    printf("line_size = %d\n", line_size);
     char *line = (char *)malloc(sizeof(char) * (line_size + 1));
     if (NULL == line)
     {
