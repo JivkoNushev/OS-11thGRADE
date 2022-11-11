@@ -92,15 +92,21 @@ char *strdub_(const char *string)
     return res;
 }
 
-char *read_line_(int fd, ...)
+char *read_line_(int fd, int mode, ...)
 {
-    int mode = 0, end = count_bytes(fd) - 1;
+    int end = 0;
 
     va_list arg;
-    va_start(arg, fd);
-    mode = va_arg(arg, int);
+    va_start(arg, mode);
     end = va_arg(arg, int);
     va_end(arg);
+
+    if (0 == end)
+    {
+        end = count_bytes(fd) - 1;
+        printf("%d\n", end);
+    }
+    printf("mode = %d\nend = %d\n", mode, end);
 
     if (0 == count_bytes(fd))
     {
@@ -126,27 +132,57 @@ char *read_line_(int fd, ...)
         exit(5);
     }
 
+    int i = 0;
+    unsigned int buffer_c = 0;
+
     int read_status = 0;
+    int e = end;
     if (1 == mode) // read_backwards
     {
-        if (-1 == lseek(fd, end - 1, SEEK_SET))
+        end = end - sizeof buffer;
+        if (0 > end)
+            end = 0;
+
+        if (-1 == lseek(fd, end, SEEK_SET))
         {
             puts("Couldn't lseek fd\n");
             exit(7);
         }
 
-        while (0 < (read_status = read(fd, buffer, 1)) && 0 != end)
+        while (0 < (read_status = read(fd, buffer, sizeof buffer)))
         {
-            if ('\n' == buffer[0])
+            for (i = read_status - 1; i > -1; i--)
             {
+                if('\n' == buffer[i])
+                {
+                    i = read_status - i;
+                    break;
+                }
+            }
+            if (i != read_status)
+            {
+                if (-1 == lseek(fd, e - i, SEEK_SET))
+                {
+                    return NULL;
+                }
                 break;
             }
-            line_size++;
-            if (-1 == lseek(fd, --end, SEEK_SET))
+
+            if (sizeof buffer == read_status)
+            {
+                buffer_c++;
+            }
+
+
+            end = end - sizeof buffer;
+            if (0 > end)
+                end = 0;
+            if (-1 == lseek(fd, end, SEEK_SET))
             {
                 puts("Couldn't lseek fd\n");
-                exit(9);
+                exit(7);
             }
+            
         }
 
         if (-1 == read_status)
@@ -155,12 +191,10 @@ char *read_line_(int fd, ...)
             exit(8);
         }
 
-        curr_off = end + 1;
+        curr_off = i + 1;
     }
     else
     {
-        unsigned int buffer_c = 0;
-        int i = 0;
         while (0 < (read_status = read(fd, buffer, sizeof buffer)))
         {
             for (i = 0; i < read_status; i++)
@@ -192,16 +226,18 @@ char *read_line_(int fd, ...)
             exit(6);
         }
 
-        line_size = sizeof buffer * buffer_c + i;
         curr_off += line_size + 1;
     }
 
+    line_size = sizeof buffer * buffer_c + i;
+    printf("line_size = %d\n", line_size);
     char *line = (char *)malloc(sizeof(char) * (line_size + 1));
     if (NULL == line)
     {
         puts("Couldn't malloc new line\n");
         exit(2);
     }
+
 
     if (line_size != (read_status = read(fd, line, line_size)))
     {

@@ -286,7 +286,7 @@ int test_read_line_()
             puts("Couldn't open file");
             exit(2);
         }
-        if(0 != strcmp_(buffer = read_line_(fd), results[i]))
+        if(0 != strcmp_(buffer = read_line_(fd, 0), results[i]))
         {
             puts("Failed\n");
             test_status = -1;
