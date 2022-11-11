@@ -69,22 +69,19 @@ int tail(int fd, int argc, const char **argv)
     int read_status = 0;
     while (0 < (read_status = read(fd, block, sizeof block)))
     {
-        puts("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAaa");
         if (read_status == sizeof block)
         {
             blocks_count++;
         }
         else
         {
-            for(int i = read_status; i < sizeof block; i++)
+            for (int i = read_status; i < sizeof block; i++)
                 block[i] = 0;
         }
-        printf("%s", block);
         for (i = read_status - 1; - 1 < read_status; i--)
         {
             if ('\n' == block[i])
             {
-                printf("%c\n", block[i + 1]);
                 line_counter++;
             }
             if (line_counter == lines_count)
@@ -112,19 +109,18 @@ int tail(int fd, int argc, const char **argv)
         return -1;
     }
 
-    if (line_counter != lines_count)
+    
+
+    if (count_lines(fd) == lines_count)
     {
         if (-1 == lseek(fd, 0, SEEK_SET))
         {
             return -1;
         }
     }
-    else
+    else if (-1 == lseek(fd, -(i + blocks_count * sizeof block), SEEK_END))
     {
-        if (-1 == lseek(fd, -(i + blocks_count * sizeof block), SEEK_END))
-        {
-            return -1;
-        }
+        return -1;
     }
 
     print_file(fd);
@@ -139,7 +135,11 @@ int main(int argc, char const *argv[])
         err(EXIT_FAILURE, NULL);
     }
 
-    tail(fd, argc, argv);
+    if(-1 == tail(fd, argc, argv))
+    {
+        close(fd);
+        err(EXIT_FAILURE, NULL);
+    }
 
     close(fd);
     return 0;
