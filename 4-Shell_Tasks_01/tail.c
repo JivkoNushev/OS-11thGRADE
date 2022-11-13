@@ -109,8 +109,6 @@ int tail(int fd, int argc, const char **argv)
         return -1;
     }
 
-    
-
     if (count_lines(fd) == lines_count)
     {
         if (-1 == lseek(fd, 0, SEEK_SET))
@@ -135,7 +133,7 @@ int main(int argc, char const *argv[])
         err(EXIT_FAILURE, NULL);
     }
 
-    if(-1 == tail(fd, argc, argv))
+    if (-1 == tail(fd, argc, argv))
     {
         close(fd);
         err(EXIT_FAILURE, NULL);
