@@ -254,23 +254,26 @@ char *read_line_(int fd, int mode, ...)
 
 int count_bytes(int fd)
 {
+    int pos = lseek(fd, 0, SEEK_CUR);
+    if(-1 == pos)
+    {
+        return -1;
+    }
+
     if (-1 == lseek(fd, 0, SEEK_SET))
     {
-        puts("Couldn't lseek fd\n");
-        exit(2);
+        return -1;
     }
 
     int bytes_c = 0;
     if (-1 == (bytes_c = lseek(fd, 0, SEEK_END)))
     {
-        puts("Couldn't lseek fd\n");
-        exit(2);
+        return -1;
     }
 
-    if (-1 == lseek(fd, 0, SEEK_SET))
+    if (-1 == lseek(fd, pos, SEEK_SET))
     {
-        puts("Couldn't lseek fd\n");
-        exit(2);
+        return -1;
     }
 
     return bytes_c;
