@@ -327,22 +327,27 @@ unsigned int abs_(int n)
     return (n < 0) * -n + (n > 0) * n;
 }
 
-void print_file(int fd)
+int print_file(int fd)
 {
     char buffer[256];
 
     int read_status = 0;
     while (0 < (read_status = read(fd, buffer, sizeof buffer)))
     {
-        if (-1 == write(0, buffer, read_status))
+        if (-1 == write(STDOUT_FILENO, buffer, read_status))
         {
-            puts("Couldn't write to stdout\n");
-            exit(1);
+            return -1;
         }
     }
     if (-1 == read_status)
     {
-        puts("Couldn't read to file\n");
-        exit(2);
+        return -1;
     }
+
+    if(-1 == lseek(fd, 0, SEEK_SET))
+    {
+        return -1;
+    }
+
+    return 0;
 }

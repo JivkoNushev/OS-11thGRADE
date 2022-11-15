@@ -24,6 +24,6 @@ int count_lines(int fd);
 
 unsigned int abs_(int n);
 
-void print_file(int fd);
+int print_file(int fd);
 
 #endif

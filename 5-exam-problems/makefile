@@ -18,3 +18,6 @@ clean:
 
 47:
 	gcc -Wall 47_differences.c -o 47.o
+
+48:
+	gcc -Wall 48_cat.c -o 48.o
