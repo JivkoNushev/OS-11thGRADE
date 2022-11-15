@@ -165,14 +165,11 @@ int main(int argc, char const *argv[])
             exit_status = EXIT_FAILURE;
             break;
         }
-
-        if(-1 == close(fd1) || -1 == close(fd2) || -1 == close(fd3))
-        {
-            exit_status = EXIT_FAILURE;
-            break;
-        }
     } while (0);
-
+    if(-1 == close(fd1) || -1 == close(fd2) || -1 == close(fd3))
+    {
+        exit_status = EXIT_FAILURE;
+    }
     err(exit_status, NULL);
     return 0;
 }

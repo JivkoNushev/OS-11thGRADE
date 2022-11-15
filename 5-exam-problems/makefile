@@ -12,3 +12,9 @@ clean:
 
 45:
 	gcc -Wall 45_sort_numbers.c -o 45.o
+
+46:
+	gcc -Wall 46_dat-idx.c -o 46.o
+
+47:
+	gcc -Wall 47_differences.c -o 47.o

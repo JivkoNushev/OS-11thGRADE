@@ -5,6 +5,8 @@
         "stdlib.h": "c",
         "fcntl.h": "c",
         "unistd.h": "c",
-        "stat.h": "c"
+        "stat.h": "c",
+        "stdint.h": "c",
+        "types.h": "c"
     }
 }
