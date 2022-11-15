@@ -77,6 +77,9 @@ int main(int argc, char const *argv[])
         err(EXIT_FAILURE, NULL);
     }
 
-    close(fd);
+    if(-1 == close(fd))
+    {
+        err(EXIT_FAILURE, NULL);
+    }
     return 0;
 }

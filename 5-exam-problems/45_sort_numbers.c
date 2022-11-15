@@ -153,7 +153,11 @@ int main(int argc, char const *argv[])
         err(EXIT_FAILURE, NULL);
     }
     uint32_t ints[10] = {0};
-    read_ints_from_file(fd, ints);
+    if(-1 == read_ints_from_file(fd, ints))
+    {
+        close(fd);
+        err(EXIT_FAILURE, NULL);
+    }
     puts("\n");
 
     for (size_t i = 0; i < 10; i++)
@@ -162,6 +166,9 @@ int main(int argc, char const *argv[])
     }
     puts("\n");
 
-    close(fd);
+    if(-1 == close(fd))
+    {
+        err(EXIT_FAILURE, NULL);
+    }
     return 0;
 }

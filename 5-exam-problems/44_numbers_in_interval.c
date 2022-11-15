@@ -95,7 +95,10 @@ int add_set(char *file_name, struct set Set)
         return -1;
     }
 
-    close(fd);
+    if(-1 == close(fd))
+    {
+        return -1;
+    }
     return 0;
 }
 
@@ -114,7 +117,10 @@ int add_numbers(char *file_name, uint32_t *numbers, size_t size)
         return -1;
     }
 
-    close(fd);
+    if(-1 == close(fd))
+    {
+        return -1;
+    }
     return 0;
 }
 
