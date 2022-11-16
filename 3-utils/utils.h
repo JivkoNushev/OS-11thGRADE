@@ -16,7 +16,7 @@ void swap_(void *a, void *b, int size);
 
 char *strdub_(const char *string);
 
-char *read_line_(int fd, int mode, ...);
+char *read_line_(int fd, int mode, ...); // make it get_line
 
 int count_bytes(int fd);
 
@@ -25,5 +25,7 @@ int count_lines(int fd);
 unsigned int abs_(int n);
 
 int print_file(int fd);
+
+int read_line(int fd); // returns offset
 
 #endif

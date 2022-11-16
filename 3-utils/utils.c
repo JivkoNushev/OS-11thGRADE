@@ -351,3 +351,26 @@ int print_file(int fd)
 
     return 0;
 }
+
+int read_line(int fd)
+{
+    uint8_t block[256];
+    size_t size = 0;
+
+    int read_status = 0;
+    while(0 < (read_status = read(fd, block, sizeof block)))
+    {
+        size += read_status;    
+
+        if(-1 == write(STDOUT_FILENO, block, read_status))
+        {
+            return -1;
+        }
+    }
+    if(-1 == read_status)
+    {
+        return -1;
+    }
+
+    return size;
+}

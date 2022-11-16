@@ -22,14 +22,31 @@ void print_help(const char *program_name)
     -n\n\t\t number all output lines\n\n");
 }
 
-int cat_file(const char *file_name)
+int cat_file(const char *file_name, int options, ...)
 {
+    size_t line_number = 0;
+    if(2 & options)
+    {
+        va_list l;
+        va_start(l, options);
+        line_number = va_arg(l, size_t);
+        va_end(l);
+    }
+
     int fd = open(file_name, O_RDONLY);
     if(-1 == fd)
     {
         return -1;
     }
-    if(-1 == print_file(fd))
+    if(2 & options)
+    {
+        printf("\t %ld ", line_number++);
+        if(-1 == read_line(fd))
+        {
+            return -1;
+        }
+    }
+    else if(-1 == print_file(fd))
     {
         return -1;
     }
@@ -39,7 +56,7 @@ int cat_file(const char *file_name)
         return -1;
     }
 
-    return 0;
+    return line_number;
 }
 
 int main(int argc, char const *argv[])
@@ -47,6 +64,7 @@ int main(int argc, char const *argv[])
     // --help = 1
     // -n = 2
     uint8_t options = 0;
+    size_t line_number = 1;
 
     int exit_status = EXIT_SUCCESS;
     do
@@ -63,15 +81,29 @@ int main(int argc, char const *argv[])
                 if(1 == i)
                 {
                     options |= 2;
+                    break;
                 }
             }
             else if(0 == strcmp_(argv[i], "-"))
             {
-                options |= 4;
+                if(2 & options)
+                {
+                    printf("\t %ld ", line_number++);
+                    if(-1 == read_line(STDIN_FILENO))
+                    {
+                        exit_status = EXIT_FAILURE;
+                        break;
+                    }
+                }
+                else if(-1 == print_file(STDIN_FILENO))
+                {
+                    exit_status = EXIT_FAILURE;
+                    break;
+                }
             }
             else
             {
-                if(-1 == cat_file(argv[i]))
+                if(-1 == (line_number = cat_file(argv[i], options)))
                 {
                     exit_status = EXIT_FAILURE;
                     break;
@@ -92,7 +124,6 @@ int main(int argc, char const *argv[])
                 break;
             }
         }
-
     } while (0);
     
     if(EXIT_FAILURE == exit_status)
