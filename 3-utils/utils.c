@@ -374,3 +374,33 @@ int read_line(int fd)
 
     return size;
 }
+
+int cpyfile(int to, int from)
+{
+    char buffer[256];
+
+    int read_status = 0;
+    while(0 < (read_status = read(from, buffer, sizeof buffer)))
+    {   
+        if(-1 == write(to, buffer, read_status))
+        {
+            return -1;
+        }
+    }
+    if(-1 == read_status)
+    {
+        return -1;
+    }
+
+    if(-1 == lseek(to, 0, SEEK_SET))
+    {
+        return -1;
+    }
+
+    if(-1 == lseek(from, 0, SEEK_SET))
+    {
+        return -1;
+    }
+
+    return 0;
+}

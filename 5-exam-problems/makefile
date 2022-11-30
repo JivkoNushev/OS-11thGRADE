@@ -21,3 +21,6 @@ clean:
 
 48:
 	gcc -Wall 48_cat.c -o 48.o
+
+49:
+	gcc -Wall 49_patch.c -o 49.o

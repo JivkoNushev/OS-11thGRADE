@@ -26,7 +26,7 @@ int write_intervals(int fd1, int fd2, int fd3)
     int read_status = 0, set_status = 0;
     while(sizeof(struct set) == (set_status = read(fd1, &set_buffer, sizeof set_buffer)))
     {
-        printf("NEW SET\nstart = %u, len = %u\n", set_buffer.start, set_buffer.len);
+        // printf("NEW SET\nstart = %u, len = %u\n", set_buffer.start, set_buffer.len);
 
         if(-1 == lseek(fd2, sizeof set_buffer.start * (set_buffer.start - 1), SEEK_SET))
         {
@@ -34,11 +34,11 @@ int write_intervals(int fd1, int fd2, int fd3)
         }
         while (0 < (read_status = read(fd2, read_buffer, sizeof read_buffer)))
         {
-            printf("BUFFER NUMBERS\n");
-            for (int i = 0; i < read_status; i++)
-            {
-                printf("%d, ", read_buffer[i]);
-            }
+            //printf("BUFFER NUMBERS\n");
+            // for (int i = 0; i < read_status; i++)
+            // {
+            //     printf("%d, ", read_buffer[i]);
+            // }
             
             if(set_buffer.len <= read_status)
             {
@@ -134,7 +134,7 @@ int main(int argc, char const *argv[])
     // add_numbers("f_uint32_2", nums1, 20);
     int fd1 = 0, fd2 = 0, fd3 = 0;
 
-    int exit_status = 0;
+    int exit_status = EXIT_SUCCESS;
     do
     {
         fd1 = open("f_uint32_1", O_RDONLY);
@@ -170,6 +170,9 @@ int main(int argc, char const *argv[])
     {
         exit_status = EXIT_FAILURE;
     }
-    err(exit_status, NULL);
+    if(exit_status == EXIT_FAILURE)
+    {
+        err(exit_status, NULL);
+    }
     return 0;
 }

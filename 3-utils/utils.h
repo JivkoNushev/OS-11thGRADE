@@ -28,4 +28,6 @@ int print_file(int fd);
 
 int read_line(int fd); // returns offset
 
+int cpyfile(int to, int from);
+
 #endif
