@@ -24,3 +24,9 @@ clean:
 
 49:
 	gcc -Wall 49_patch.c -o 49.o
+
+56:
+	gcc -Wall 56_patch.c -o 56.o
+
+65:
+	gcc -Wall 65_fork.c -o 65.o
