@@ -22,6 +22,56 @@ void print_help(const char *program_name)
     -n\n\t\t number all output lines\n\n");
 }
 
+int read_line(int fd, size_t line_number)
+{
+    char buf[BUFSIZ];
+    uint8_t block[256];
+    size_t size = 0;
+
+    
+
+    int read_status = 0;
+    while(0 < (read_status = read(fd, block, sizeof block)))
+    {
+        if(0 == size)
+        {
+            setbuf(stdout, buf);
+            fprintf(stdout, "     %ld ", line_number);
+        }
+        size += read_status;    
+
+        for (size_t i = 0; i < read_status; i++)
+        {
+            if('\n' == block[i])
+            {
+                if(-1 == lseek(fd, i - read_status + 1, SEEK_CUR))
+                {
+                    return -1;
+                }
+                
+                if(-1 == fwrite(block, sizeof *block, i, stdout))
+                {
+                    return -1;
+                }
+                fprintf(stdout, "\n");
+                fflush(stdout);
+                return size - read_status + i + 1;
+            }
+        }
+        if(-1 == fwrite(block, sizeof *block, read_status / sizeof *block, stdout))
+        {
+            return -1;
+        }
+    }
+    if(-1 == read_status)
+    {
+        return -1;
+    }
+
+    fflush(stdout);
+    return 0;
+}
+
 int cat_file(const char *file_name, int options, ...)
 {
     size_t line_number = 0;
@@ -40,8 +90,11 @@ int cat_file(const char *file_name, int options, ...)
     }
     if(2 & options)
     {
-        printf("\t %ld ", line_number++);
-        if(-1 == read_line(fd))
+        int read_status = 0;
+        while(0 < (read_status = read_line(fd, line_number++)))
+        {
+        }
+        if(-1 == read_status)
         {
             return -1;
         }
@@ -56,13 +109,12 @@ int cat_file(const char *file_name, int options, ...)
         return -1;
     }
 
+
     return line_number;
 }
 
 int main(int argc, char const *argv[])
 {
-    // --help = 1
-    // -n = 2
     uint8_t options = 0;
     size_t line_number = 1;
 
@@ -81,15 +133,17 @@ int main(int argc, char const *argv[])
                 if(1 == i)
                 {
                     options |= 2;
-                    break;
                 }
             }
             else if(0 == strcmp_(argv[i], "-"))
             {
                 if(2 & options)
                 {
-                    printf("\t %ld ", line_number++);
-                    if(-1 == read_line(STDIN_FILENO))
+                    int read_status = 0;
+                    while(0 < (read_status = read_line(STDIN_FILENO, line_number)))
+                    {
+                    }
+                    if(-1 == read_status)
                     {
                         exit_status = EXIT_FAILURE;
                         break;
@@ -103,7 +157,15 @@ int main(int argc, char const *argv[])
             }
             else
             {
-                if(-1 == (line_number = cat_file(argv[i], options)))
+                if(2 & options)
+                {
+                    if(-1 == (line_number = cat_file(argv[i], options, line_number)))
+                    {
+                        exit_status = EXIT_FAILURE;
+                        break;
+                    }
+                }
+                else if(-1 == cat_file(argv[i], options))
                 {
                     exit_status = EXIT_FAILURE;
                     break;
@@ -125,7 +187,8 @@ int main(int argc, char const *argv[])
             }
         }
     } while (0);
-    
+
+    fflush(stdout);    
     if(EXIT_FAILURE == exit_status)
     {
         err(exit_status, NULL);
