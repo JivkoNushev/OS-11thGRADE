@@ -13,6 +13,82 @@
 #define STUDENTS_S 25
 #define ANSWERS_S 25
 
+int strlen_(const char *str)
+{
+    unsigned int len = 0;
+    if (NULL == str)
+    {
+        return 0;
+    }
+    for (const char *l = str; '\0' != *l; l++, len++)
+        ;
+    return len;
+}
+
+char* int_to_str(int n)
+{
+    char number[11] = {0};
+    
+    int i = 9;
+    while (0 != n)
+    {
+        number[i--] = n % 10;
+        n /= 10;
+    }
+    int len = strlen_(number);
+
+
+    char *result = (char*)malloc(len + 1);
+    if(NULL == result)
+    {
+        return NULL;
+    }
+
+    for(int i = 10 - len, j = 0; i < 10; j++, i++)
+    {
+        result[j] = number[i];
+    }
+    printf("number_str: %s\n", result);
+
+    result[len] = '\0';
+
+
+    return result;    
+}
+
+char* cat_size_t(char *str, size_t number)
+{   
+    char *number_str = int_to_str((int)number);
+    if(NULL == number_str)
+    {
+        return NULL;
+    }
+
+    int str_s = strlen_(str);
+    int number_str_s = strlen_(str);
+
+    char *result = (char*)malloc(str_s + number_str_s + 1);
+    if(NULL == result)
+    {
+        return NULL;
+    }
+    printf("str: %s\n", str);
+
+    for(int i = 0; i < str_s; i++)
+    {
+        result[i] = str[i]; 
+    }
+    for(int i = 0; i < number_str_s; i++)
+    {
+        result[i + str_s] = number_str[i]; 
+    }
+    result[str_s + number_str_s] = '\0';
+
+
+    free(str);
+    free(number_str);
+    return result;
+}
 
 int get_grade(size_t points)
 {
@@ -38,19 +114,16 @@ int get_grade(size_t points)
 
 int path_to_str(const char *directory, size_t i, int flag)
 {
-    char *dir = (char*)malloc(1); 
-    if(NULL == dir)
+    char *dir = cat_size_t(dir, i);
+    if (NULL == dir)
     {
         return -1;
     }
-    if (-1 == sprintf(dir, "%s%lu", directory, i))
-    {
-        return -1;
-    }
-    printf("%s", dir);
-    int fd = open(dir, flag);
-    free(dir);
+    printf("%s\n", dir);
 
+    int fd = open(dir, flag);
+
+    free(dir);
     return fd;
 }
 
